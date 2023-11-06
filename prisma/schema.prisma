@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+model Users {
+  id String @id @default(uuid())
+  name String
+  email String @unique 
+  password String
+  imageUrl String @db.Text
+
+  members Member[]
+  enrollments Enrollments[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Member {
+  id String @id @default(uuid())
+  role Role @default(STUDENT)
+
+  userId String
+  user Users @relation(fields: [userId], references: [id])
+
+  classId String
+  class Class @relation(fields: [classId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Class {
+  id String @id @default(uuid())
+  owner String
+  name String
+  subject String
+  imageUrl String @db.Text
+  classCode String @unique
+
+  members Member[]
+  enrollments Enrollments[]
+  classPosts ClassPost[]
+  assigments Assigment[]
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Enrollments {
+  id String @id @default(uuid())
+
+  userId String
+  user Users @relation(fields: [userId], references: [id])
+
+  classId String
+  class Class @relation(fields: [classId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model ClassPost {
+  id String @id @default(uuid())
+  title String
+
+  classId String
+  class Class @relation(fields: [classId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Assigment {
+  id String @id @default(uuid())
+  title String
+  description String
+  dueDate DateTime
+  maxScore Int
+
+  classId String
+  class Class @relation(fields: [classId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
