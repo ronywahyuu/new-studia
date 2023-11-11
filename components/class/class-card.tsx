@@ -12,6 +12,8 @@ import {
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { generateInitials } from "@/lib/utils";
+import Link from "next/link";
+import ActionTooltip from "../action-tooltip";
 
 type AssignmentListProps = {
   tasks: string[];
@@ -47,7 +49,15 @@ const AssignmentList = ({ tasks }: AssignmentListProps) => {
   );
 };
 
-const ClassCard = () => {
+interface ClassCardProps {
+  name: string;
+  subject: string;
+  imageUrl: string;
+  classCode: string;
+  owner: string;
+}
+
+const ClassCard = ({ name, owner, subject, imageUrl, classCode }: ClassCardProps) => {
   const tasks = ["Task 1", "Task 2", "Task 2", "Task 2", "Task 2", "Task 2"];
   const participants = [
     {
@@ -72,21 +82,26 @@ const ClassCard = () => {
     },
   ];
 
-  
   return (
     <Card className="w-full shadow-md rounded-xl ">
       <CardHeader className="text-white rounded-t-xl  bg-[#037A87]">
         <div className="flex justify-between">
           <div className="">
-            <CardTitle className="text-2xl font-bold">Class Title</CardTitle>
+            <Link href="/classes/1">
+              <CardTitle className="text-2xl font-bold underline">
+                {name}
+              </CardTitle>
+            </Link>
             <CardDescription className="text-slate-300">
-              Teacher Name
+              {owner}
             </CardDescription>
           </div>
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <ActionTooltip label="Name">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </ActionTooltip>
         </div>
       </CardHeader>
       <AssignmentList tasks={tasks} />
@@ -95,18 +110,20 @@ const ClassCard = () => {
         <div className="flex flex-row items-center justify-between w-full  py-3 ">
           <div className="flex flex-col">
             <p className="text-gray-500 font-medium">Class Code</p>
-            <p className="text-gray-500">123456</p>
+            <p className="text-gray-500">{classCode}</p>
           </div>
 
           {/* participant's avatar */}
           <div className="flex flex-row items-center">
             {participants.slice(0, 3).map((participant, index) => (
-              <Avatar key={index} className="-mx-2">
-                <AvatarImage src={participant.image} />
-                <AvatarFallback className="bg-cyan-700 text-white">
-                  {generateInitials(participant.name)}
-                </AvatarFallback>
-              </Avatar>
+              <ActionTooltip key={index} label={participant.name}>
+                <Avatar key={index} className="-mx-2">
+                  <AvatarImage src={participant.image} />
+                  <AvatarFallback className="bg-cyan-700 text-white">
+                    {generateInitials(participant.name)}
+                  </AvatarFallback>
+                </Avatar>
+              </ActionTooltip>
             ))}
             {participants.length > 3 && (
               <Avatar>

@@ -3,6 +3,7 @@ import { Agbalumo, Inter, Montserrat, Poppins } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import ModalProvider from "@/components/providers/modal-provider";
 
 // const inter = Inter({ subsets: ["latin"] });
 // const montserrat = Montserrat({ subsets: ["latin"] });
@@ -25,14 +26,17 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         {/* <body className={inter.className}>{children}</body> */}
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          storageKey="studia-theme"
-        >
-          <body className={`${poppins.className} bg-gray-50`}>{children}</body>
-        </ThemeProvider>
+        <body className={`${poppins.className} bg-gray-50`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            storageKey="studia-theme"
+          >
+            <ModalProvider />
+            {children}
+          </ThemeProvider>
+        </body>
       </html>
     </ClerkProvider>
   );

@@ -59,7 +59,6 @@ model Class {
   classPosts ClassPost[]
   assigments Assigment[]
 
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

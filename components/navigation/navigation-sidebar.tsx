@@ -23,7 +23,7 @@ const NavigationSidebar = () => {
         <span className="uppercase font-bold text-gray-400">My Desk</span>
 
         <div className="">
-          <NavigationItem title="Home" route="/home" icon={<Home />} />
+          <NavigationItem title="Home" route="/classes" icon={<Home />} />
         </div>
         <div className="">
           <NavigationItem title="My Schedule" route="/schedules" icon={<Calendar />} />

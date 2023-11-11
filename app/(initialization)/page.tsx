@@ -7,7 +7,7 @@ const InitializationPage = async (props: Props) => {
   const createProfile = await initialProfile();
 
   if (createProfile) {
-    return redirect("/home");
+    return redirect("/classes");
   }
 
   return null;
