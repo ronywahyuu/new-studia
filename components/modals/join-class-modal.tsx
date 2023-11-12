@@ -21,42 +21,49 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "path";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useModalStore } from "@/hooks/use-modal-store";
 
 const JoinClassModal = () => {
-  const {isOpen, modalType, onClose} = useModalStore()
-  const isModalOpen = isOpen &&  modalType === 'joinClass';
+  const { isOpen, modalType, onClose } = useModalStore();
+  const isModalOpen = isOpen && modalType === "joinClass";
 
   const formSchema = z.object({
-    name: z.string().min(2, {
-      message: "Class name must be at least 2 characters.",
+    classCode: z.string().min(2, {
+      message: "Class code must be at least 2 characters.",
     }),
-    subject: z.string().min(2, {
-      message: "Subject must be at least 2 characters.",
-    }),
+    // name: z.string().min(2, {
+    //   message: "Class name must be at least 2 characters.",
+    // }),
+    // subject: z.string().min(2, {
+    //   message: "Subject must be at least 2 characters.",
+    // }),
   });
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      subject: "",
+      classCode: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // console.log(values);
     try {
-      await axios.post("/api/classes", values);
-    } catch (error) {
-      console.log(error);
+      await axios.put("/api/classes", values);
+
+      // reset form
+      form.reset();
+      onClose();
+    } catch (error: any) {
+      // console.log(error?.response.data);
+      alert(error?.response.data);
     }
   };
 
   const handleClose = () => {
     form.reset();
-    onClose()
-  }
+    onClose();
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -72,11 +79,11 @@ const JoinClassModal = () => {
               {/* validation error */}
               <FormField
                 control={form.control}
-                name="name"
+                name="classCode"
                 render={({ field, formState: { errors } }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                      Class Name (required)
+                      Class Code (required)
                     </FormLabel>
                     <FormMessage />
                     {/* <span className="text-red-500">
@@ -86,25 +93,6 @@ const JoinClassModal = () => {
                       <Input
                         className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         placeholder="Enter class name"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="subject"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                      Subject
-                    </FormLabel>
-                    <FormMessage />
-                    <FormControl>
-                      <Input
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        placeholder="Enter class subject"
                         {...field}
                       />
                     </FormControl>

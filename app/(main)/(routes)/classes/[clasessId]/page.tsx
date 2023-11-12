@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { db } from "@/lib/db";
 import Image from "next/image";
 
 interface ClasessIdPageProps {
@@ -16,14 +17,31 @@ interface ClasessIdPageProps {
     clasessId: string;
   };
 }
-const ClasessIdPage = ({ params }: ClasessIdPageProps) => {
+const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
+
+  const classData = await db.class.findUnique({
+    where: {
+      id: params.clasessId,
+    },
+    include: {
+      members: {
+        select: {
+          role: true,
+          user:true
+        },
+      },
+    }
+  });
+
+  // console.log(classData?.members);
+
   return (
     <div className="w-full md:w-3/5 py-16 mx-auto">
       <Card className="w-full shadow-md rounded-xl ">
         <CardHeader className="text-white rounded-t-xl  bg-[#037A87]">
           <div className="flex justify-between">
             <div className="h-32 relative">
-              <CardTitle className="text-2xl font-bold  ">Class Title</CardTitle>
+              <CardTitle className="text-2xl font-bold  ">{classData?.name}</CardTitle>
               <CardDescription className="text-slate-300 ">
                 Teacher Name
               </CardDescription>
@@ -35,7 +53,7 @@ const ClasessIdPage = ({ params }: ClasessIdPageProps) => {
           <div className="flex flex-row items-center justify-between w-full  py-3 ">
             <div className="flex flex-col">
               <p className="text-gray-500 font-medium">Class Code</p>
-              <p className="text-gray-500">123456</p>
+              <p className="text-gray-500">{classData?.classCode}</p>
             </div>
 
             {/* participant's avatar */}
@@ -46,7 +64,7 @@ const ClasessIdPage = ({ params }: ClasessIdPageProps) => {
       {/* rich text editor */}
       <div className="py-10">
         <h2 className="text-xl font-medium text-gray-800">Announce Something to your class</h2>
-        {/* <Editor/> */}
+        <Editor/>
 
         {/* comment list  */}
         <div>

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { generateUniqueClassCode } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
+// create class
 export async function POST(req: Request) {
   try {
     const profile = await currentProfile();
@@ -32,12 +33,66 @@ export async function POST(req: Request) {
       },
     });
 
+    const member = await db.member.create({
+      data: {
+        role: "TEACHER",
+        classId: classRoom.id,
+        userId: profile.id,
+      },
+    });
+
     return NextResponse.json(subject);
   } catch (error) {
     console.log(error);
   }
 }
 
+// join class
+export async function PUT(req: Request) {
+  try {
+    const profile = await currentProfile();
+    const { classCode } = await req.json();
+    if (!profile) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const classRoom = await db.class.findFirst({
+      where: { classCode },
+    });
+
+    if (!classRoom) {
+      return new NextResponse("Class not found", { status: 404 });
+    }
+
+    const memberClass = await db.member.findFirst({
+      where: {
+        userId: profile.id,
+        classId: classRoom.id,
+      },
+    });
+
+    if (memberClass) {
+      return new NextResponse("You are already a member of this class", {
+        status: 400,
+      });
+    }
+
+
+    const member = await db.member.create({
+      data: {
+        role: "STUDENT",
+        classId: classRoom.id,
+        userId: profile.id,
+      },
+    });
+
+    return NextResponse.json(classRoom);
+  } catch (error) {
+    // console.log(error);
+  }
+}
+
+// get classes
 export async function GET() {
   try {
     const profile = await currentProfile();
@@ -56,4 +111,4 @@ export async function GET() {
   } catch (error) {
     console.log(error);
   }
-}  
+}

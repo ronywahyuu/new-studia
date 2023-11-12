@@ -30,18 +30,34 @@ const mockData = {
 
 const HomePage = async () => {
   const profile = await currentProfile();
+
   const classes = await db.class.findMany({
     where: {
-      owner: profile?.id,
+      members: {
+        some: {
+          userId: profile?.id,
+        },
+      },
     },
     include: {
       members: {
-        include: {
-          user: true,
+        select: {
+          role: true,
+          user: {
+            select: {
+              name: true,
+            },
+          },
         },
       },
     },
   });
+
+  // const classOwner = classes[0].members.find(member=>member.role === "TEACHER");
+
+  // console.log(classes[0].members);
+
+  // console.log(classOwner);
 
   const classesData = [
     {
@@ -111,14 +127,15 @@ const HomePage = async () => {
         {classes.map((classData, index) => (
           <ClassCard
             key={index}
+            id={classData.id}
             name={classData.name}
             subject={classData.subject}
             classCode={classData.classCode}
             imageUrl={classData.imageUrl}
             owner={classData.owner}
+            members={classData.members}
           />
         ))}
-
       </div>
     </>
   );

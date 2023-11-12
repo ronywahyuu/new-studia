@@ -50,14 +50,37 @@ const AssignmentList = ({ tasks }: AssignmentListProps) => {
 };
 
 interface ClassCardProps {
+  id: string;
   name: string;
   subject: string;
   imageUrl: string;
   classCode: string;
   owner: string;
+  members: any[];
 }
 
-const ClassCard = ({ name, owner, subject, imageUrl, classCode }: ClassCardProps) => {
+const ClassCard = ({
+  id,
+  name,
+  owner,
+  members,
+  subject,
+  imageUrl,
+  classCode,
+}: ClassCardProps) => {
+  // console.log(members[0]?.user.name)
+
+  const findClassOwner = members.find((member) => member.role === "TEACHER")
+    ?.user?.name;
+  const classOwner = findClassOwner
+    ?.split(" ")
+    .map((word: string) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+
+  // console.log(classOwner)
+
+  // const classOwner = members.find((member) => member.role === "TEACHER");
+
   const tasks = ["Task 1", "Task 2", "Task 2", "Task 2", "Task 2", "Task 2"];
   const participants = [
     {
@@ -87,13 +110,13 @@ const ClassCard = ({ name, owner, subject, imageUrl, classCode }: ClassCardProps
       <CardHeader className="text-white rounded-t-xl  bg-[#037A87]">
         <div className="flex justify-between">
           <div className="">
-            <Link href="/classes/1">
+            <Link href={`/classes/${id}`}>
               <CardTitle className="text-2xl font-bold underline">
                 {name}
               </CardTitle>
             </Link>
             <CardDescription className="text-slate-300">
-              {owner}
+              {classOwner}
             </CardDescription>
           </div>
           <ActionTooltip label="Name">
