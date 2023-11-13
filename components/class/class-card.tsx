@@ -11,7 +11,7 @@ import {
 
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { generateInitials } from "@/lib/utils";
+import { formatMemberNameToCapital, generateInitials } from "@/lib/utils";
 import Link from "next/link";
 import ActionTooltip from "../action-tooltip";
 
@@ -77,7 +77,14 @@ const ClassCard = ({
     .map((word: string) => word[0].toUpperCase() + word.slice(1))
     .join(" ");
 
-  // console.log(classOwner)
+  const membersAvatar = members
+    .filter((member) => member.role === "STUDENT")
+    .map((member) => {
+      return {
+        name: member.user.name,
+        image: member.user.imageUrl,
+      };
+    });
 
   // const classOwner = members.find((member) => member.role === "TEACHER");
 
@@ -138,8 +145,11 @@ const ClassCard = ({
 
           {/* participant's avatar */}
           <div className="flex flex-row items-center">
-            {participants.slice(0, 3).map((participant, index) => (
-              <ActionTooltip key={index} label={participant.name}>
+            {membersAvatar.slice(0, 3).map((participant, index) => (
+              <ActionTooltip
+                key={index}
+                label={formatMemberNameToCapital(participant.name)}
+              >
                 <Avatar key={index} className="-mx-2">
                   <AvatarImage src={participant.image} />
                   <AvatarFallback className="bg-cyan-700 text-white">
@@ -148,10 +158,10 @@ const ClassCard = ({
                 </Avatar>
               </ActionTooltip>
             ))}
-            {participants.length > 3 && (
+            {membersAvatar.length > 3 && (
               <Avatar>
                 <AvatarFallback className="bg-gray-700 text-white">
-                  +{participants.length - 3}
+                  +{membersAvatar.length - 3}
                 </AvatarFallback>
               </Avatar>
             )}

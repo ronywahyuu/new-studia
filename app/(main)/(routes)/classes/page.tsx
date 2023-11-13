@@ -43,21 +43,12 @@ const HomePage = async () => {
       members: {
         select: {
           role: true,
-          user: {
-            select: {
-              name: true,
-            },
+          user: true,
           },
         },
-      },
     },
   });
 
-  // const classOwner = classes[0].members.find(member=>member.role === "TEACHER");
-
-  // console.log(classes[0].members);
-
-  // console.log(classOwner);
 
   const classesData = [
     {
@@ -99,7 +90,7 @@ const HomePage = async () => {
         <div>
           <h2 className="text-slate-700 font-bold text-xl ">Classes</h2>
           <p className="text-gray-500 font-medium text-lg">
-            You have 3 classes
+            You have {classes.length} classes
           </p>
         </div>
 

@@ -5,14 +5,15 @@ interface ActionTooltipProps {
   label: string;
   side? : "left" | "right" | "top" | "bottom";
   align?: "start" | "center" | "end";
+  className?: string;
 }
-const ActionTooltip = ({ children, side, align, label }: ActionTooltipProps) => {
+const ActionTooltip = ({ children, side, align, label, className }: ActionTooltipProps) => {
   return (
     <TooltipProvider>
       <Tooltip delayDuration={50}>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipTrigger className={className} asChild>{children}</TooltipTrigger>
         <TooltipContent side={side} align={align}>
-          <p>{label.toLowerCase()}</p>
+          <p>{label}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import ModalProvider from "@/components/providers/modal-provider";
-
+import NextTopLoader from "nextjs-toploader";
 // const inter = Inter({ subsets: ["latin"] });
 // const montserrat = Montserrat({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -27,6 +27,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         {/* <body className={inter.className}>{children}</body> */}
         <body className={`${poppins.className} bg-gray-50`}>
+          <NextTopLoader />
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

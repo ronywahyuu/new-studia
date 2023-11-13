@@ -16,6 +16,16 @@ export const generateInitials = (name: string) => {
   return initials;
 };
 
+// generate name with capital each word
+export const formatMemberNameToCapital = (name: string) => {
+  const nameSplit = name.split(" ");
+  const nameCapitalized = nameSplit
+    .map((name) => name[0].toUpperCase() + name.slice(1))
+    .join(" ");
+
+  return nameCapitalized;
+};
+
 export const generateUniqueClassCode =  () => {
   // return Math.random().toString(36).substring(2, 7);
   const code = Math.random().toString(36).substring(2, 7);

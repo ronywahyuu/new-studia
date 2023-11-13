@@ -22,11 +22,14 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { Button } from "../ui/button";
-import { Search } from "lucide-react";
+import { Library, Search } from "lucide-react";
+import Link from "next/link";
 
-export function SearchCommand() {
+interface SearchCommandProps {
+  classes: any;
+}
+export function SearchCommand({ classes }: SearchCommandProps) {
   const [open, setOpen] = React.useState(false);
-
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -38,6 +41,7 @@ export function SearchCommand() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
 
   return (
     <>
@@ -70,8 +74,22 @@ export function SearchCommand() {
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Suggestions">
-              <CommandItem>
+            <CommandGroup heading="Class">
+              {classes.map((classData: any, index: number) => (
+                <Link
+                  key={index}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                  href={`/classes/${classData.id}`}
+                >
+                  <CommandItem className="cursor-pointer">
+                    <Library />
+                    {classData.name}
+                  </CommandItem>
+                </Link>
+              ))}
+              {/* <CommandItem>
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 <span>Calendar</span>
               </CommandItem>
@@ -82,7 +100,7 @@ export function SearchCommand() {
               <CommandItem>
                 <RocketIcon className="mr-2 h-4 w-4" />
                 <span>Launch</span>
-              </CommandItem>
+              </CommandItem> */}
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading="Settings">

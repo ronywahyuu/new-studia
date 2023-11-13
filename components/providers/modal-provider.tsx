@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import CreateClassModal from "../modals/create-class-modal";
 import JoinClassModal from "../modals/join-class-modal";
+import SettingClassModal from "../modals/setting-class-modal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -16,6 +17,7 @@ const ModalProvider = () => {
     <>
       <CreateClassModal />
       <JoinClassModal />
+      <SettingClassModal/>
     </>
   );
 };

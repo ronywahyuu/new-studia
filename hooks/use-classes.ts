@@ -1,14 +1,29 @@
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
+import { User } from "@clerk/nextjs/server";
 import axios from "axios";
 
-export const useGetClasses = async () => {
-  const res = await fetch("http://localhost");
-
-  if(!res.ok){
-    throw new Error("Failed to fetch classes")
-  }
-  // if(res.status !== 200) {
-  //   throw new Error("Failed to fetch classes")
-  // }
-
-  return res.json()
+export const useGetClasses = async (userId: string) => {
+  // const profile = await currentProfile();
+  const classes = await db.class.findMany({
+    where: {
+      members: {
+        some: {
+          userId,
+        },
+      },
+    },
+    include: {
+      members: {
+        select: {
+          role: true,
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
 };

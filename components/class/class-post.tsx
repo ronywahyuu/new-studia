@@ -35,7 +35,7 @@ type CardProps = React.ComponentProps<typeof Card>;
 
 function ClassPost({ className, ...props }: CardProps) {
   return (
-    <Card className={cn("w-full mt-3", className)} {...props}>
+    <Card className={cn("w-full mb-10 ", className)} {...props}>
       <CardHeader className="flex">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
