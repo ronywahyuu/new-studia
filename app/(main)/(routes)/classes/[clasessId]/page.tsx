@@ -1,4 +1,6 @@
+import ActionTooltip from "@/components/action-tooltip";
 import ClassCard from "@/components/class/class-card";
+import ClassLink from "@/components/class/class-link";
 import ClassPost from "@/components/class/class-post";
 import Editor from "@/components/text-editor/editor";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -14,8 +16,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { db } from "@/lib/db";
-import { cn } from "@/lib/utils";
-import { BellIcon, CheckIcon, PlusIcon } from "lucide-react";
+import { cn, formatMemberNameToCapital } from "@/lib/utils";
+import { BellIcon, CheckIcon, MoreVertical, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -30,6 +32,11 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
       id: params.clasessId,
     },
     include: {
+      classPosts: {
+        include: {
+          user: true,
+        },
+      },
       members: {
         select: {
           role: true,
@@ -38,6 +45,12 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
       },
     },
   });
+
+  const classPosts = classData?.classPosts;
+
+  const teacherName = classData?.members.find(
+    (member) => member.role === "TEACHER"
+  )?.user?.name;
 
   return (
     <div className="w-full md:w-5/6 px-16 py-5 mx-auto">
@@ -49,7 +62,7 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
                 {classData?.name}
               </CardTitle>
               <CardDescription className="text-slate-300 ">
-                Teacher Name
+                {formatMemberNameToCapital(teacherName as string)}
               </CardDescription>
             </div>
           </div>
@@ -58,8 +71,8 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
           {/* class code */}
           <div className="flex flex-row items-center justify-between w-full  py-3 ">
             <div className="flex flex-col">
-              <p className="text-gray-500 font-medium">Class Code</p>
-              <p className="text-gray-500">{classData?.classCode}</p>
+              <p className="text-gray-500 font-medium">Subject</p>
+              <p className="text-gray-500">{classData?.subject}</p>
             </div>
 
             {/* participant's avatar */}
@@ -68,11 +81,11 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
       </Card>
 
       {/* rich text editor */}
-      <div className="py-10">
-        <h2 className="text-xl font-medium text-gray-800">
+      <div className="pt-10">
+        {/* <h2 className="text-xl font-medium text-gray-800">
           Announce Something to your class
-        </h2>
-        {/* <Editor/> */}
+        </h2> */}
+        <Editor classData={classData} />
 
         {/* comment list  */}
         <div></div>
@@ -87,33 +100,13 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
               <CardTitle>Link Meet</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <Link
-                target="_blank"
-                rel="norefferer noopener"
-                href="https://meet.google.com/ivq-igwe-etn?authuser=0&hs=179"
-              >
-                <div className=" flex items-center space-x-4 hover:bg-gray-200 rounded-md border p-4">
-                  <Image
-                    src="/meet-logo.png"
-                    width={30}
-                    height={30}
-                    alt="meet logo"
-                  />
-                  {/* <BellIcon /> */}
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Google Meet
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <div></div>
+              <ClassLink link="https://meet.google.com/ivq-igwe-etn?authuser=0&hs=179" />
             </CardContent>
-            <CardFooter>
+            {/* <CardFooter>
               <Button className="w-full">
                 <PlusIcon className="mr-2 h-4 w-4" /> Add Meet Link
               </Button>
-            </CardFooter>
+            </CardFooter> */}
           </Card>
           {/* assignment list */}
           <Card className={cn("w-[300px]")}>
@@ -128,9 +121,7 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
                   <p className="text-sm font-medium leading-none">
                     Push Notifications
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    Send notifications to device.
-                  </p>
+                  <p className="text-sm text-muted-foreground"></p>
                 </div>
                 <Switch />
               </div>
@@ -143,16 +134,56 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
                 href="https://meet.google.com/ivq-igwe-etn?authuser=0&hs=179"
               >
                 <div className=" flex items-center space-x-4 hover:bg-gray-200 rounded-md border p-4">
-                  <Image
+                  {/* <Image
                     src="/meet-logo.png"
                     width={30}
                     height={30}
                     alt="meet logo"
-                  />
+                  /> */}
                   {/* <BellIcon /> */}
                   <div className="flex-1 space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      Google Meet
+                      Page 1-10
+                    </p>
+                  </div>
+                </div>
+              </Link>
+              <Link
+                target="_blank"
+                rel="norefferer noopener"
+                href="https://meet.google.com/ivq-igwe-etn?authuser=0&hs=179"
+              >
+                <div className=" flex items-center space-x-4 hover:bg-gray-200 rounded-md border p-4">
+                  {/* <Image
+                    src="/meet-logo.png"
+                    width={30}
+                    height={30}
+                    alt="meet logo"
+                  /> */}
+                  {/* <BellIcon /> */}
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Page 1-10
+                    </p>
+                  </div>
+                </div>
+              </Link>
+              <Link
+                target="_blank"
+                rel="norefferer noopener"
+                href="https://meet.google.com/ivq-igwe-etn?authuser=0&hs=179"
+              >
+                <div className=" flex items-center space-x-4 hover:bg-gray-200 rounded-md border p-4">
+                  {/* <Image
+                    src="/meet-logo.png"
+                    width={30}
+                    height={30}
+                    alt="meet logo"
+                  /> */}
+                  {/* <BellIcon /> */}
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Page 1-10
                     </p>
                   </div>
                 </div>
@@ -167,11 +198,14 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
           </Card>{" "}
         </div>
 
-        <div>
+        <div className="flex-1">
+          {classPosts?.map((classPost) => (
+            <ClassPost key={classPost.id} classPost={classPost} />
+          ))}
+          {/* <ClassPost />
           <ClassPost />
           <ClassPost />
-          <ClassPost />
-          <ClassPost />
+          <ClassPost /> */}
         </div>
       </div>
     </div>

@@ -38,3 +38,40 @@ export async function PATCH(
     console.log(error);
   }
 }
+
+
+// create class post
+export async function POST(
+  req: Request,
+  { params }: { params: { classesId: string } }
+) {
+  try {
+    const profile = await currentProfile();
+    const { title, body } = await req.json();
+
+    if (!profile) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const classRoom = await db.class.findFirst({
+      where: { id: params.classesId },
+    });
+
+    if (!classRoom) {
+      return new NextResponse("Class not found", { status: 404 });
+    }
+
+    const createPost = await db.classPost.create({
+      data: {
+        title,
+        body,
+        classId: params.classesId,
+        userId: profile.id,
+      },
+    });
+
+    return NextResponse.json(createPost, { status: 200 });
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -53,7 +53,7 @@ const SettingClassModal = () => {
   useEffect(() => {
     if (classData) {
       form.setValue("name", classData.name);
-      form.setValue("subject", classData.subject);
+      form.setValue("subject", classData.subject as string);
     }
   }, [classData, form]);
   const onSubmit = async (values: z.infer<typeof formSchema>) => {

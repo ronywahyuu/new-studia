@@ -17,12 +17,6 @@ enum Role {
   STUDENT
 }
 
-enum ClassPostType {
-  MATERIAL
-  FORUM
-  ASSIGNMENT
-}
-
 model Users {
   id String @id @default(uuid())
   userId String @unique
@@ -32,6 +26,9 @@ model Users {
 
   members Member[]
   enrollments Enrollments[]
+  classPosts ClassPost[]
+  assigments Assigment[]
+  materials Material[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,7 +53,7 @@ model Class {
   id String @id @default(uuid())
   owner String
   name String
-  subject String
+  subject String?
   imageUrl String @db.Text
   classCode String @unique
 
@@ -64,6 +61,7 @@ model Class {
   enrollments Enrollments[]
   classPosts ClassPost[]
   assigments Assigment[]
+  materials Material[]  
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -85,8 +83,10 @@ model Enrollments {
 
 model ClassPost {
   id String @id @default(uuid())
-  title String
-  type ClassPostType @default(FORUM)
+  body String @db.Text
+
+  userId String
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   classId String
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
@@ -95,26 +95,33 @@ model ClassPost {
   updatedAt DateTime @updatedAt
 }
 
-// model Material {
-//   id String @id @default(uuid())
-//   title String
-//   description String
-//   fileUrl String @db.Text
+model Material {
+  id String @id @default(uuid())
+  title String
+  description String
+  fileUrl String @db.Text
 
-//   classPostId String
-//   classPost ClassPost @relation(fields: [classPostId], references: [id], onDelete: Cascade)
+  userId String
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+  classId String
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
 
-// }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
 
 model Assigment {
   id String @id @default(uuid())
   title String
   description String
+  fileUrl String? @db.Text
   dueDate DateTime
   maxScore Int
+
+  userId String
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   classId String
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)

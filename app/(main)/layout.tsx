@@ -45,7 +45,7 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
                   <div className="h-2 w-2 bg-red-500 rounded-full absolute right-1"></div>
                   <BellIcon className="h-6 w-6 text-gray-700 cursor-pointer" />
                 </div>
-                {/* <ThemeToggle /> */}
+                <ThemeToggle />
                 <UserButton />
               </div>
             </div>

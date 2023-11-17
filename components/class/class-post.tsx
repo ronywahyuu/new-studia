@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import CommentInput from "../comments/comment-input";
 // import CommentList from "../comments/comment-item";
 import CommentItem from "../comments/comment-item";
+// import { ClassPost } from "@/types";
 // import { Switch } from "@/components/ui/switch"
 
 const notifications = [
@@ -33,28 +34,44 @@ const notifications = [
 
 type CardProps = React.ComponentProps<typeof Card>;
 
-function ClassPost({ className, ...props }: CardProps) {
+interface ClassPostProps {
+  className?: string;
+  CardProps?: CardProps;
+  classPost?: any;
+}
+
+function ClassPost({ className, classPost, ...props }: ClassPostProps) {
   return (
-    <Card className={cn("w-full mb-10 ", className)} {...props}>
-      <CardHeader className="flex">
+    <Card className={cn("w-full  mb-10 ", className)} {...props}>
+      <div className="flex p-5 items-center gap-3">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div>
-          <CardTitle>Rony Wahyu</CardTitle>
+          <CardTitle className="text-xl">{classPost?.user.name}</CardTitle>
           <CardDescription>
-            <span className="text-sm text-muted-foreground">2 hours ago</span>
+            <span className="text-sm text-muted-foreground">
+              {
+                classPost?.createdAt
+                  .toString()
+                  .split("T")[0]
+                  .split("-")
+                  .reverse()
+                  .join("-")
+              }
+            </span>
           </CardDescription>
         </div>
-      </CardHeader>
+      </div>
       <CardContent className="grid gap-4">
         <div>
           <p className="text-sm text-gray-800">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            {classPost?.body}
+            {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
             voluptatum, voluptate, quia, quos voluptas odio quae consequatur
             dolorum magnam officia quas? Quisquam voluptatum, voluptate, quia,
-            quos voluptas odio quae consequatur dolorum magnam officia quas?
+            quos voluptas odio quae consequatur dolorum magnam officia quas? */}
           </p>
           {/* {notifications.map((notification, index) => (
             <div
