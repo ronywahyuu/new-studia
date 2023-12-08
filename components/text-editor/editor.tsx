@@ -30,7 +30,6 @@ interface EditorProps {
 }
 
 const Editor = ({ classData }: EditorProps) => {
-  console.log(classData);
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),

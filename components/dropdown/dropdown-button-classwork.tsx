@@ -11,10 +11,15 @@ import {
 import { useModalStore } from "@/hooks/use-modal-store";
 import { Button } from "../ui/button";
 
-const DropDownButtonClasswork = () => {
+interface DropDownButtonClassworkProps {
+  classId: string;
+}
+
+const DropDownButtonClasswork = ({ classId }: DropDownButtonClassworkProps) => {
   const { onOpen } = useModalStore();
+
   return (
-    <DropdownMenu >
+    <DropdownMenu>
       <DropdownMenuTrigger>
         <ActionTooltip label="Create Material or Assignment">
           <Button variant="default">
@@ -24,16 +29,18 @@ const DropDownButtonClasswork = () => {
         </ActionTooltip>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="">
-        <DropdownMenuItem  onClick={() => onOpen("createClass")}>
+        <DropdownMenuItem onClick={() => onOpen("createMaterial", {
+          classId,
+        })}>
           <div className="cursor-pointer px-10 py-5 gap-5 flex">
             <BookText />
             <span className="text-lg">Material</span>
           </div>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onOpen("joinClass")} className="">
+        <DropdownMenuItem onClick={() => onOpen("createAssignment")} className="">
           <div className="cursor-pointer px-10 py-5 gap-5 flex justify-between">
             <BookCheck />
-            <span className="text-lg">Join Class</span>
+            <span className="text-lg">Assignment</span>
           </div>
         </DropdownMenuItem>
       </DropdownMenuContent>

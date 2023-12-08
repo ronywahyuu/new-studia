@@ -29,6 +29,7 @@ model Users {
   classPosts ClassPost[]
   assigments Assigment[]
   materials Material[]
+  comments Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,6 +57,7 @@ model Class {
   subject String?
   imageUrl String @db.Text
   classCode String @unique
+  meetingLink String? @db.Text
 
   members Member[]
   enrollments Enrollments[]
@@ -91,6 +93,8 @@ model ClassPost {
   classId String
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
 
+  comments Comment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -115,16 +119,31 @@ model Material {
 model Assigment {
   id String @id @default(uuid())
   title String
-  description String
+  instructions String?
   fileUrl String? @db.Text
   dueDate DateTime
-  maxScore Int
+  currentScore Int
+  maxScore Int @default(100)
 
   userId String
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   classId String
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id String @id @default(uuid())
+  body String @db.Text
+
+  userId String
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId String
+  post ClassPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

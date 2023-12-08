@@ -32,7 +32,6 @@ const SettingClassModal = () => {
   const { class: classData } = data;
   const router = useRouter();
 
-  console.log(classData);
 
   const formSchema = z.object({
     name: z.string().min(2, {

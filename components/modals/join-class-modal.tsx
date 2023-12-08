@@ -23,11 +23,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "path";
 import axios, { AxiosError } from "axios";
 import { useModalStore } from "@/hooks/use-modal-store";
+import { useRouter } from "next/navigation";
 
 const JoinClassModal = () => {
   const { isOpen, modalType, onClose } = useModalStore();
   const isModalOpen = isOpen && modalType === "joinClass";
-
+  const router = useRouter();
   const formSchema = z.object({
     classCode: z.string().min(2, {
       message: "Class code must be at least 2 characters.",
@@ -53,6 +54,7 @@ const JoinClassModal = () => {
 
       // reset form
       form.reset();
+      router.refresh()
       onClose();
     } catch (error: any) {
       // console.log(error?.response.data);
@@ -107,7 +109,7 @@ const JoinClassModal = () => {
                   !form.formState.isValid || form.formState.isSubmitting
                 }
               >
-                Create
+                {form.formState.isSubmitting ? "Joining..." : "Join"}
               </Button>
             </DialogFooter>
           </form>

@@ -23,10 +23,12 @@ import { format } from "path";
 import axios from "axios";
 import { useModalStore } from "@/hooks/use-modal-store";
 import { createClass } from "@/app/action";
+import { useRouter } from "next/navigation";
 
 const CreateClassModal = () => {
   const { isOpen, modalType, onClose } = useModalStore();
   const isModalOpen = isOpen && modalType === "createClass";
+  const router = useRouter();
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -49,6 +51,7 @@ const CreateClassModal = () => {
       await axios.post("/api/classes", values);
 
       form.reset();
+      router.refresh();
       onClose();
     } catch (error) {
       console.log(error);

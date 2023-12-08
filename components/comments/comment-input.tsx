@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import qs from "query-string";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,19 +17,48 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SendHorizontal } from "lucide-react";
+import axios from "axios";
+import { useParams, useRouter } from "next/navigation";
+
+interface CommentInputProps {
+  postId?: string;
+}
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  body: z.string().min(1),
 });
 
-function CommentInput() {
+function CommentInput({ postId }: CommentInputProps) {
   const form = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      body: "",
+    },
   });
+  const { clasessId } = useParams();
+  const router = useRouter();
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    // console.log(values);
+    // alert(JSON.stringify(values, null, 2));
+    try {
+      // const res = await axios.post("/api/comments", values);
+      const url = qs.stringifyUrl({
+        url: "/api/comments",
+        query: {
+          postId,
+          classId: clasessId as string,
+        },
+      });
+
+      const res = await axios.post(url, values);
+      // console.log(url);
+      router.refresh();
+      form.reset();
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="w-full">
@@ -39,7 +69,7 @@ function CommentInput() {
         >
           <FormField
             control={form.control}
-            name="username"
+            name="body"
             render={({ field }) => (
               <FormItem className="w-full flex">
                 <FormControl>
@@ -53,7 +83,10 @@ function CommentInput() {
               </FormItem>
             )}
           />
-          <Button type="submit">
+          <Button
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            type="submit"
+          >
             <SendHorizontal />
           </Button>
         </form>

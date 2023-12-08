@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { db } from "@/lib/db";
 import { cn, formatMemberNameToCapital } from "@/lib/utils";
-import { BellIcon, CheckIcon, MoreVertical, PlusIcon } from "lucide-react";
+import { BellIcon, CheckIcon, MoreVertical, PlusIcon, Video } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,6 +33,17 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
     },
     include: {
       classPosts: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          user: true,
+        },
+      },
+      materials: {
+        orderBy: {
+          createdAt: "desc",
+        },
         include: {
           user: true,
         },
@@ -47,10 +58,15 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
   });
 
   const classPosts = classData?.classPosts;
+  const classMaterials = classData?.materials;
 
   const teacherName = classData?.members.find(
     (member) => member.role === "TEACHER"
   )?.user?.name;
+
+  const meetingLink = classData?.meetingLink;
+
+
 
   return (
     <div className="w-full md:w-5/6 px-16 py-5 mx-auto">
@@ -100,13 +116,12 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
               <CardTitle>Link Meet</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <ClassLink link="https://meet.google.com/ivq-igwe-etn?authuser=0&hs=179" />
+              {meetingLink ? (
+                <ClassLink classData={classData} link="https://meet.google.com/ivq-igwe-etn?authuser=0&hs=179" />
+              ) : (
+                <ClassLink   classId={params.clasessId}/>
+              )}
             </CardContent>
-            {/* <CardFooter>
-              <Button className="w-full">
-                <PlusIcon className="mr-2 h-4 w-4" /> Add Meet Link
-              </Button>
-            </CardFooter> */}
           </Card>
           {/* assignment list */}
           <Card className={cn("w-[300px]")}>
@@ -199,8 +214,19 @@ const ClasessIdPage = async ({ params }: ClasessIdPageProps) => {
         </div>
 
         <div className="flex-1">
+          {classMaterials?.map((material) => (
+            <ClassPost
+              key={material.id}
+              type="material"
+              classMaterial={material}
+            />
+          ))}
           {classPosts?.map((classPost) => (
-            <ClassPost key={classPost.id} classPost={classPost} />
+            <ClassPost
+              key={classPost.id}
+              type="classPost"
+              classPost={classPost}
+            />
           ))}
           {/* <ClassPost />
           <ClassPost />

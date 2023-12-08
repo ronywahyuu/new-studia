@@ -1,16 +1,18 @@
 import { Class } from "@prisma/client";
 import { create } from "zustand";
-export type ModalType = "createClass" | "joinClass" | "settingClass";
+export type ModalType = "createClass" | "joinClass" | "settingClass" | "createMaterial" | 'createAssignment' | "createMeetingLink";
 
 interface ModalData {
   class?: Class;
+  classId?: string;
+  type? : 'edit' | 'create';
 }
 export interface ModalStore {
-  modalType: ModalType;
-  isOpen: boolean;
   data: ModalData;
-  onOpen: (type: ModalType, data?: ModalData) => void;
+  isOpen: boolean;
+  modalType: ModalType;
   onClose: () => void;
+  onOpen: (type: ModalType, data?: ModalData) => void;
   setModalType: (type: ModalType) => void;
 }
 

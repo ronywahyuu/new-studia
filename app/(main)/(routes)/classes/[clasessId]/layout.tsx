@@ -8,10 +8,10 @@ import Link from "next/link";
 import React from "react";
 
 interface ClassIdLayoutProps {
+  children: React.ReactNode;
   params: {
     clasessId: string;
   };
-  children: React.ReactNode;
 }
 const ClassIdLayout = async ({ params, children }: ClassIdLayoutProps) => {
   // console.log(params.clasessId);

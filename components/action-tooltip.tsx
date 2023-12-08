@@ -1,11 +1,11 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 interface ActionTooltipProps {
+  align?: "start" | "center" | "end";
   children: React.ReactNode;
+  className?: string;
   label: string;
   side? : "left" | "right" | "top" | "bottom";
-  align?: "start" | "center" | "end";
-  className?: string;
 }
 const ActionTooltip = ({ children, side, align, label, className }: ActionTooltipProps) => {
   return (

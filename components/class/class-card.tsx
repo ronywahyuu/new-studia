@@ -50,13 +50,13 @@ const AssignmentList = ({ tasks }: AssignmentListProps) => {
 };
 
 interface ClassCardProps {
-  id: string;
-  name: string;
-  subject: string;
-  imageUrl: string;
   classCode: string;
-  owner: string;
+  id: string;
+  imageUrl: string;
   members: any[];
+  name: string;
+  owner: string;
+  subject: string;
 }
 
 const ClassCard = ({

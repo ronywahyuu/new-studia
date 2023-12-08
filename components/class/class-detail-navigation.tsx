@@ -9,9 +9,9 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface ClassDetailNavigationProps {
+  classData: any;
   classesId: string;
   profile: any;
-  classData: any;
 }
 const ClassDetailNavigation = ({
   classesId,

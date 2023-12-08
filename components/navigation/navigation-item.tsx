@@ -3,10 +3,10 @@
 import Link from "next/link";
 
 interface NavigationItemProps {
-  title: string;
   icon: React.ReactNode;
-  route?: string;
   onClick?: () => void;
+  route?: string;
+  title: string;
 }
 
 const NavigationItem = ({
